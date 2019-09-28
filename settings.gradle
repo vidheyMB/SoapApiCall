@@ -1,0 +1,2 @@
+include ':app', ':vmac'
+rootProject.name='ViewModelApiCall'
