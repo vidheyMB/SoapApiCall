@@ -70,7 +70,7 @@ open class VMac {
     }
 
 
-    inline fun <reified T> execute(crossinline checkValue: (va: ArrayList<T>) -> Unit): Disposable {
+    inline fun <reified T> execute(crossinline checkValue: (va: ArrayList<T>?) -> Unit): Disposable {
 
         return ApiCall(Request, MethodBaseName + MethodName, URL)
             .call()
@@ -101,13 +101,13 @@ open class VMac {
             },
                 {
                     Log.e("VMac_Error","VMac_Error : $it")
-
+                    checkValue(null)
                 })
 
     }
 
 
-    fun executes(checkValue: (va: Any) -> Unit): Disposable {
+    fun executes(checkValue: (va: Any?) -> Unit): Disposable {
 
         return ApiCall(Request, MethodBaseName + MethodName, URL)
             .call()
@@ -124,7 +124,7 @@ open class VMac {
             },
                 {
                     Log.e("Error","Subscribe_Error : $it")
-
+                    checkValue(null)
                 })
     }
 
