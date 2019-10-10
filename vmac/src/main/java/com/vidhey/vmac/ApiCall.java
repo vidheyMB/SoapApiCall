@@ -1,6 +1,7 @@
 package com.vidhey.vmac;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -14,54 +15,58 @@ import okhttp3.Response;
 
 public class ApiCall {
 
-        private String soapRequest;
-        private String soapMethodBase;
-        private String url;
+    private String soapRequest;
+    private String soapMethodBase;
+    private String url;
 
-        public ApiCall(String soapRequest, String soapMethodBase, String url) {
-            this.soapRequest = soapRequest.replaceAll("&","and");
-            this.soapMethodBase = soapMethodBase;
-            this.url = url;
-        }
+    public ApiCall(String soapRequest, String soapMethodBase, String url) {
+        this.soapRequest = soapRequest.replaceAll("&", "and");
+        this.soapMethodBase = soapMethodBase;
+        this.url = url;
+    }
 
-        /**
-        *
-        *  Single is an Observable which gives response at once.
-        *
-        **/
+    /**
+     * Single is an Observable which gives response at once.
+     **/
 
-        public Single call(){
+    public Single call() {
 
-            return new Single() {
-                @Override
-                protected void subscribeActual(final SingleObserver observer) {
-                    RequestBody body = RequestBody.create(MediaType.parse("text/xml; charset=utf-8"), soapRequest);
+        return new Single() {
+            @Override
+            protected void subscribeActual(final SingleObserver observer) {
+                RequestBody body = RequestBody.create(MediaType.parse("text/xml; charset=utf-8"), soapRequest);
 //                    Timber.d(soapRequest);
 
-                    final Request request = new Request.Builder()
-                            .url(url)
-                            .post(body)
-                            .addHeader("Content-Type", "text/xml; charset=utf-8")
-                            .addHeader("cache-control", "no-cache")
-                            .addHeader("Accept", "text/xml")
-                            .addHeader("soapaction", soapMethodBase)
-                            .addHeader("Pragma", "no-cache")
-                            .build();
+                final Request request = new Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .addHeader("Content-Type", "text/xml; charset=utf-8")
+                        .addHeader("cache-control", "no-cache")
+                        .addHeader("Accept", "text/xml")
+                        .addHeader("soapaction", soapMethodBase)
+                        .addHeader("Pragma", "no-cache")
+                        .build();
 
-                    new OkHttpClient().newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            observer.onError(e);
-                        }
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .connectTimeout(30, TimeUnit.SECONDS)
+                        .writeTimeout(30, TimeUnit.SECONDS)
+                        .readTimeout(50, TimeUnit.SECONDS)
+                        .build();
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String mMessage = response.body().string();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        observer.onError(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String mMessage = response.body().string();
 //                            Timber.w("SUCCESS Response: "+ mMessage);
-                            observer.onSuccess(mMessage);
-                        }
-                    });
-                }
-            };
-        }
+                        observer.onSuccess(mMessage);
+                    }
+                });
+            }
+        };
+    }
 }
