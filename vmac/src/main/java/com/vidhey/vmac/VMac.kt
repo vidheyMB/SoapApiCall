@@ -27,6 +27,7 @@ open class VMac {
     protected lateinit var URL: String
     protected lateinit var MethodBaseName: String
     protected lateinit var Request: String
+    protected var printLogs:Boolean = false
 
     public val ParentTagsNormal = ArrayList<String>()
     public val ChildTags = ArrayList<String>()
@@ -69,6 +70,11 @@ open class VMac {
         return this
     }
 
+    fun printLog(boolean: Boolean){
+        if(boolean){
+            printLogs = true
+        }
+    }
 
     inline fun <reified T> execute(crossinline checkValue: (va: ArrayList<T>?) -> Unit): Disposable {
 
@@ -77,6 +83,12 @@ open class VMac {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
+
+                if(printLogs){
+                    Log.d("Request :",Request.toString())
+                    Log.d("Response :",it.toString())
+                }
+
                 val document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
                 val result =
                     document.parse(ByteArrayInputStream(it.toString().toByteArray()))
@@ -114,6 +126,12 @@ open class VMac {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
+
+                if(printLogs){
+                    Log.d("Request :",Request.toString())
+                    Log.d("Response :",it.toString())
+                }
+
                 val document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
                 return@map document.parse(ByteArrayInputStream(it.toString().toByteArray()))
             }
