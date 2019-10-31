@@ -79,6 +79,10 @@ open class VMac {
 
     inline fun <reified T> execute(crossinline checkValue: (va: ArrayList<T>?) -> Unit): Disposable {
 
+        if(printLogs){
+            Log.d("Request :", "Request : $Request")
+        }
+
         return ApiCall(Request, MethodBaseName + MethodName, URL)
             .call()
             .subscribeOn(Schedulers.io())
@@ -86,7 +90,6 @@ open class VMac {
             .map {
 
                 if(printLogs){
-                    Log.d("Request :", "Request : $Request")
                     Log.d("Response :", "Response : $it")
                 }
 
@@ -122,6 +125,10 @@ open class VMac {
 
     fun executes(checkValue: (va: Any?) -> Unit): Disposable {
 
+        if(printLogs){
+            Log.d("Request :", "Request : $Request")
+        }
+
         return ApiCall(Request, MethodBaseName + MethodName, URL)
             .call()
             .subscribeOn(Schedulers.io())
@@ -129,7 +136,6 @@ open class VMac {
             .map {
 
                 if(printLogs){
-                    Log.d("Request :", "Request : $Request")
                     Log.d("Response :", "Response : $it")
                 }
 
