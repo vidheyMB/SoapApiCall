@@ -86,7 +86,7 @@ open class VMac {
             .map {
 
                 if(printLogs){
-//                    Log.d("Request :", "Request : $Request")
+                    Log.d("Request :", "Request : $Request")
                     Log.d("Response :", "Response : $it")
                 }
 
@@ -129,8 +129,8 @@ open class VMac {
             .map {
 
                 if(printLogs){
-                    Log.d("Request :",Request.toString())
-                    Log.d("Response :",it.toString())
+                    Log.d("Request :", "Request : $Request")
+                    Log.d("Response :", "Response : $it")
                 }
 
                 val document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
