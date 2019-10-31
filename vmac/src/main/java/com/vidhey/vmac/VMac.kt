@@ -27,7 +27,7 @@ open class VMac {
     protected lateinit var URL: String
     protected lateinit var MethodBaseName: String
     protected lateinit var Request: String
-    protected var printLogs:Boolean = false
+    public var printLogs:Boolean = false
 
     public val ParentTagsNormal = ArrayList<String>()
     public val ChildTags = ArrayList<String>()
@@ -70,10 +70,11 @@ open class VMac {
         return this
     }
 
-    fun printLog(boolean: Boolean){
+    fun printLog(boolean: Boolean): VMac{
         if(boolean){
             printLogs = true
         }
+        return this
     }
 
     inline fun <reified T> execute(crossinline checkValue: (va: ArrayList<T>?) -> Unit): Disposable {
